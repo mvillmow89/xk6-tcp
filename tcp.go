@@ -2,7 +2,7 @@ package tcp
 
 import (
 	"net"
-
+	"crypto/tls"
 	"go.k6.io/k6/js/modules"
 )
 
@@ -14,6 +14,15 @@ type TCP struct{}
 
 func (tcp *TCP) Connect(addr string) (net.Conn, error) {
 	conn, err := net.Dial("tcp", addr)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
+}
+
+func (tcp *TCP) ConnectTLS(addr string) (net.Conn, error) {
+	conn, err := tls.Dial("tcp", addr, &tls.Config{InsecureSkipVerify: true})
 	if err != nil {
 		return nil, err
 	}
